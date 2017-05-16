@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas{
+            background: #ccc;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="500px" height="500px"></canvas>
+</body>
+<script>
+    var canvas=document.querySelector("canvas");
+    var cobj=canvas.getContext("2d");
+    cobj.translate(250,250)
+    cobj.beginPath();
+    cobj.arc(0,0,100,0,2*Math.PI)
+    cobj.stroke()
+    cobj.rotate(Math.PI/2)
+    function poly(cobj,side,r,style) {
+
+
+    var side=side||3;
+    var r=r||100;
+    var style=style||"stroke"
+        cobj.save()
+    var angle=Math.PI/side;
+    var x=Math.cos(angle)*r;
+    var y=Math.sin(angle)*r;
+    cobj.beginPath();
+    cobj.moveTo(x,y);
+    for (var i=0;i<side;i++){
+        cobj.lineTo(x,-y)
+
+        cobj.rotate(-angle*2)
+    }
+    cobj[style]();
+
+    cobj.restore();
+    } poly(cobj,8,200,"fill")
+      /*  for(var i=0;i<side;i++){
+
+            cobj.lineTo(x,-y)
+
+            cobj.rotate(-angle*2)
+        }
+        cobj[style]()
+        cobj.restore()
+    }
+    poly(cobj,8,200,"fill")*/
+
+
+</script>
+</html>

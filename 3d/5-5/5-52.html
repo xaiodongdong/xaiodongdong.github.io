@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas{
+            display: block;
+            background:#ccc;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<canvas width="500px" height="500px"></canvas>
+
+</body>
+<script>
+    var canvas=document.querySelector("canvas");
+
+    var cobj=canvas.getContext("2d");
+    cobj.beginPath();
+
+
+    var offset=1;
+
+
+  /* setInterval(function () {
+       offset++;
+       cobj.setLineDash([4,2]);
+       cobj.lineDashOffset=offset;
+
+       cobj.clearRect(99,99,202,202)
+       cobj.strokeStyle="red";
+       cobj.lineWidth="2";
+       cobj.strokeRect(100,100,200,200)
+
+   },50)*/
+//    cobj.globalAlpha=0.5;
+
+
+    var linear=cobj.createLinearGradient(100,100,200,200)
+    linear.addColorStop(0,"#f00")
+    linear.addColorStop(1,"#f99")
+    cobj.fillStyle=linear
+    cobj.fillRect(100,100,100,100)
+
+
+    var radial=cobj.createRadialGradient(250,250,0,250,250,100)
+    radial.addColorStop(0,"yellow")
+    radial.addColorStop(1,"#fff")
+    cobj.fillStyle=radial
+    cobj.beginPath()
+    cobj.arc(250,250,110,0,Math.PI*2)
+    //    cobj.arc(250,250,120,0,Math.PI*2)
+    //    cobj.arc(250,250,130,0,Math.PI*2)
+    //    cobj.arc(250,250,140,0,Math.PI*2)
+    cobj.fill("evenodd")
+    cobj.fillStyle="#000"
+    cobj.font="16px 微软雅黑"
+    cobj.textAlign="center";
+    cobj.textBaseline="middle";
+
+    cobj.fillText("阿沙德",250,250)
+
+
+
+    //绘制一个圆角矩形路径
+    //
+    //    function radiusRect(cobj,x,y,w,h,r) {
+    //        cobj.moveTo(x+r,y)
+    //        cobj.lineTo(x+w-r,y)
+    //        cobj.quadraticCurveTo(x+w,y,x+w,y+r)
+    //        cobj.lineTo(x+w,y+h-r)
+    //        cobj.quadraticCurveTo(x+w,y+h,x+w-r,y+h)
+    //        cobj.lineTo(x+r,y+h)
+    //        cobj.quadraticCurveTo(x,y+h,x,y+h-r)
+    //        cobj.lineTo(x,y+r)
+    //        cobj.quadraticCurveTo(x,y,x+r,y)
+    //    }
+    ////    radiusRect(cobj,300,300,100,100,10)
+    //    cobj.clearRect(0,0,500,500)
+    //    cobj.beginPath()
+    //    cobj.lineWidth=4
+    //    cobj.lineJoin=round
+    //    //round圆角 bevel平角 miter尖角
+    //    cobj.miterLimit=5
+    //    cobj.lineCap="round";
+    //    //round圆帽 square长方形  默认值butt
+    //    cobj.moveTo(100,100)
+    //    cobj.lineTo(200,100)
+    //    cobj.lineTo(100,200)
+    //
+    ////    radiusRect(cobj,300,300,150,100,15)
+    //    cobj.stroke()
+</script>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .scene {
+            width: 500px;
+            height: 500px;
+
+            border-top: 1px solid #cccccc;
+            border-left: 1px solid #cccccc;
+            margin: 0 auto;
+        }
+
+        .block {
+            width: 49px;
+            height: 49px;
+            background: #333;
+            float: left;
+            border-right: 1px solid #cccccc;
+            border-bottom: 1px solid #cccccc;
+        }
+
+        .num {
+            background: #fff;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .show {
+
+            background: url("lei.jpg") center center no-repeat;
+            background-size: cover;
+        }
+
+        .control {
+            width: 100px;
+            height: 200px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 999;
+        }
+
+        .flag {
+            background: url("qizi.jpg") center center no-repeat;
+            background-size: cover;
+        }
+
+        .flagnum {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+        }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            var num = 15;
+            do {
+                $(".scene").empty();
+                for (var i = 0; i < 10; i++) {
+                    for (var j = 0; j < 10; j++) {
+                        var isLei = Math.random() > 0.85;    //概率
+                        //                    console.log(isLei)
+                        $("<div>")
+                                .addClass(function () {
+                                    if (isLei) {
+                                        return "block lei"
+                                    } else {
+                                        return "block";
+                                    }
+                                })
+                                .attr("id", i + "-" + j)     //添加坐标id
+                                .data("pos", {x: i, y: j})      //保存坐标
+                                .mousedown(mousedownEvent)  //添加点击事件
+                                .appendTo(".scene");     //追加元素
+                    }
+                }
+            } while ($(".lei").length != 15);
+            function mousedownEvent(e) {
+                //e.which 通过which来判断左击和右击，左击为1，右击为3
+                if (e.which == 1) {
+                    leftclick.call(this)
+                } else {
+                    rightclick.call(this)
+                }
+            }
+
+            function leftclick() {
+                //如果猜中雷，让所有雷显现，添加show类名
+                if ($(this).hasClass("flag")) {
+                    return;
+
+                }
+                if ($(this).hasClass("lei")) {
+                    $(".lei").addClass("show")
+                } else {
+                    $(this).addClass("num");
+                    var pos = $(this).data("pos");
+                    var n = 0;
+
+                    for (var i = pos.x - 1; i <= pos.x + 1; i++) {
+                        for (var j = pos.y - 1; j <= pos.y + 1; j++) {
+                            if ($("#" + i + "-" + j).hasClass("lei")) {
+                                n++;
+                            }
+                        }
+                    }
+                    $(this).html(n);     //将数字添加进页面
+                    if (n == 0) {
+                        for (var i = pos.x - 1; i <= pos.x + 1; i++) {
+                            for (var j = pos.y - 1; j <= pos.y + 1; j++) {
+                                var obj = $("#" + i + "-" + j);
+                                console.log(obj.length);
+                                if (obj.length == 1 && !obj.hasClass("num")) {
+                                    leftclick.call(obj[0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            function rightclick() {
+                //                alert("right")
+                if ($(this).hasClass("num")) {
+                    return;
+                }
+                if ($(this).hasClass("flag")) {
+                    $(this).removeClass("flag")
+                    num++;
+                } else {
+
+                    num--;
+                    $(this).addClass("flag");
+                    $(".flagnum").html("flag:" + num);
+                    if (num == 0) {
+                        if (num == 0 && $(".flag").filter(".lei").length == 15) {
+                            alert("succcess")
+                        }
+                        /*else{
+                         alert("请重新选择")
+                         num++;
+                         $(this).removeClass("flag")
+                         return;
+                         }*/
+                    }
+                    /* if(num==0&&$(".flag").filter(".lei").length==15){
+                     alert("成功")
+                     }else {
+                     num++;
+                     return;
+                     }*/
+
+                }
+            }
+
+            //清除浏览器默认右击事件
+            $(document).on("contextmenu", function (e) {
+                e.preventDefault();
+            })
+        })
+
+
+    </script>
+
+</head>
+<body>
+<div class="mask">
+
+</div>
+<div class="scene">
+
+</div>
+
+<div class="control">
+    <div class="start">开始</div>
+    <time></time>
+    <div class="flagnum">flag:</div>
+    <div>重新开始</div>
+    <div>难度选择</div>
+    <div>排行榜</div>
+</div>
+</body>
+
+
+<!--<script>
+    do{
+        $(".scene").empty();
+
+    for( var i=0;i<10;i++){
+        for(var j=0;j<10;j++){
+            var islei=Math.random()>0.9;
+            $("<div>").addClass(function () {
+
+                    if(islei){
+                        return "block lei"
+
+                    }else{
+                        return "block"
+                    }
+
+        }).attr("id",i+"-"+j)
+                    .data("pos",{x:i,y:j})
+                    .mousedown(mousedownEvent).appendTo(".scene");
+        }
+    }
+    }while ($(".lei").length!=10)
+    function mousedownEvent(e) {
+        if(e.which==1){
+            leftclick.call(this);
+        }
+        else{
+            rightclick.call(this)
+        }
+    }
+    function leftclick() {
+        if($(this).hasClass("lei")){
+            $(".lei").addClass("show")
+        }else{
+            $(this).addClass("num");
+            var pos=$(this).data("pos");
+            var n=0;
+
+            for(var i=pos.x-1;i<=pos.x+1;i++){
+                for (var j=pos.y-1;j<=pos.y+1;j++){
+
+                    if($("#"+i+"-"+"j").hasClass("lei")){
+                       n++;
+                        }
+                    }
+                }
+
+            $(this).html(n)
+            if(n==0){
+                for(var a=pos.x-1;a<pos.x+1;a++){
+                    for (var j=pos.y-1;j<pos.y+1;j++){
+                        var obj=$("#"+a+"-"+"j")
+                        if(obj.length==1){
+                            if(!obj.hasClass("num")){
+                                leftclick.call(obj[0]);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+    }
+    function rightclick() {
+
+    }
+    $(document).on("contextmenu",function () {
+        e.preventDefault();
+    })
+</script>-->
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box {
+            width: 300px;
+            height: 300px;
+
+            position: relative;
+
+        }
+        .item{
+            width: 300px;height: 300px;
+        }
+
+        .mask {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            /*opacity: 0;*/
+
+        }
+
+        .box img {
+            width: 300px;
+            height: 300px;
+        }
+
+        .show {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 310px;
+            top: 0;
+            overflow: hidden;
+            /*opacity: 0;*/
+
+        }
+
+        .show img {
+            width: 900px;
+            height: 900px;
+
+        }
+        .copy{
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="item">
+        <div class="mask"></div>
+        <img src="img/ys535.jpg" alt="">
+    </div>
+    <div class="copy"></div>
+
+    <div class="show">
+        <img src="img/ys535.jpg" alt="">
+    </div>
+
+</div>
+</body>
+<script>
+    var mask = document.querySelector(".mask");
+    var box = document.querySelector(".box");
+    var show = document.querySelector(".show")
+    var showing = document.querySelector(".show img");
+    const  bili=box.offsetHeight/mask.offsetHeight;
+    box.onmouseover = function () {
+        mask.style.opacity = 1;
+        show.style.display = "block";
+
+    }
+    box.onmouseout = function () {
+        mask.style.opacity = 0;
+        show.style.display = "none";
+    }
+    box.onmousemove=function (e) {
+        var [ox,oy]=[e.offsetX,e.offsetY];
+        var [mx,my]=[ox-mask.offsetWidth/2,oy-mask.offsetWidth/2];
+
+        if(mx<0){
+            mx=0;
+        }
+        if(my<0){
+            my=0;
+        }
+        if(mx>box.offsetWidth-mask.offsetWidth){
+            mx=box.offsetWidth-mask.offsetWidth;
+
+        }mask.style.left=mx+"px";
+        if(my>box.offsetHeight-mask.offsetHeight){
+           my=box.offsetHeight-mask.offsetHeight;
+        }
+        mask.style.top=my+"px";
+        showing.style.marginLeft=-bili*mx+"px";
+        showing.style.marginTop=-bili*my+"px";
+    }
+
+
+</script>
+</html>

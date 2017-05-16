@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>伪3d透视效果</title>
+    <style>
+        html,body{ padding:0px; margin:0px; height:100%; width:100%;overflow:hidden;}
+        #box{ background:#ccc; height:100%; border:1px solid #ccc;position:relative; overflow:hidden;}
+        #debug{ width:200px; background:#fff; border:1px solid #ccc; position:absolute; left:10px; top:0px;}
+    </style>
+</head>
+<body>
+<div id="box">
+</div>
+<div id="debug"></div>
+<script>
+    void function(window){
+        var document = window.document;
+        var debug = document.getElementById('debug');
+        function ObjtoStr(obj){
+            var arr = [];
+            for(var i in obj){
+                if(isNaN(obj[i])) continue;
+                arr.push(i + ':' + obj[i]);
+            }
+            return arr.join('; ');
+        }
+        function getElementOffset(element){
+            var left = 0, top = 0;
+            do{
+                left += element.offsetLeft;
+                top += element.offsetTop;
+            }while(element = element.offsetParent);
+            return {
+                left:left,
+                top:top
+            };
+        }
+        function getMouseOffset(event){
+            return {
+                x:(event.pageX || event.clientX + document.body.scrollLeft - document.body.clientLeft),
+                y:(event.pageY || event.clientY + document.body.scrollTop - document.body.clientTop)
+            };
+        }
+        function addEventListener(element,type,fun){
+            if(element.addEventListener){
+                element.addEventListener(type,function(event){
+                    fun(event);
+                },false);
+            }else{
+                element.attachEvent('on'+type,function(){
+                    fun(window.event);
+                });
+            }
+        }
+        function extend(subClass,supClass){
+            var fun = function(){},
+                    prototype = subClass.prototype;
+            fun.prototype = supClass.prototype;
+            subClass.prototype = new fun();
+            for(var i in prototype){
+                subClass.prototype[i] = prototype[i];
+            }
+            subClass.$supClass = supClass;
+            subClass.prototype.$supClass = function(){
+                var supClass = arguments.callee.caller.$supClass;
+                if(typeof supClass == 'function'){
+                    supClass.apply(this,arguments);
+                    this.$supClass = supClass;
+                }
+            };
+            subClass.prototype.constructor = subClass;
+            return subClass;
+        }
+        /**
+         * WH类，高宽
+         */
+        function WH(w,h){
+            this.w = w;
+            this.h = h;
+        }
+        WH.prototype = {
+            clone:function(){
+                return new WH(this.w,this.h);
+            }
+        };
+        /**
+         * xyz坐标类
+         *
+         */
+        function XYZ(x,y,z){
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        XYZ.prototype = {
+            clone:function(){
+                return new XYZ(this.x,this.y,this.z);
+            }
+        };
+        /**
+         * 场景类
+         */
+        function Scene(options){
+            //属性
+            //dom
+            this.element = null;
+            //场景距离
+            this.fl = 500;
+            this.wh = null;
+            //基准z轴
+            this.baseZ = 0;
+            //中心消失点坐标
+            this.cX = 0;
+            this.cY = 0;
+            //中心消失点便宜
+            this.cXl = 0;
+            this.cYl = 0;
+            //偏移系数
+            this.ce = 1;
+            this.ThingList = [];
+            this.setOption(options);
+            this.init();
+        }
+        Scene.prototype = {
+            setOption:function(options){
+                for(var i in options){
+                    switch(i){
+                        case 'element':
+                            this[i] = typeof options[i] == 'string' ? document.getElementById(options[i]) : options[i];
+                            break;
+                    }
+                }
+            },
+            init:function(){
+                if(!this.element) throw new Error(90,'not box');
+                this.wh = new WH(this.element.clientWidth,this.element.clientHeight);
+                this.bindEvent();
+            },
+            addThing:function(/* Thing */ thing){
+                this.ThingList.push(thing);
+                this.calcPosition(thing);
+                this.element.appendChild(thing.getElement(this));
+            },
+            //计算位置及大小
+            calcPosition:function(/*Thing*/ thing){
+                this.cX = this.element.clientWidth/2;
+                this.cY = this.element.clientHeight/2;
+                scale = this.fl/(this.fl + thing.xyz.z+this.baseZ);
+                if(scale <= 0){
+                    thing.element.style.display = 'none';
+                    return ;
+                }else{
+                    thing.element.style.display = '';
+                }
+                thing.element.style.width = thing.wh.w * scale + 'px';
+                thing.element.style.height = thing.wh.h * scale + 'px';
+                thing.element.style.top = (this.cY + ((thing.xyz.y+this.cYl-this.cY) * scale)) + 'px';
+                thing.element.style.left = (this.cX + ((thing.xyz.x+this.cXl-this.cX) * scale)) + 'px';
+                thing.element.style.zIndex = Math.round(scale*1000);
+                if(thing.isOpacity){
+                    thing.element.style.opacity = Math.min(scale*4.5,1);
+                    thing.element.style.filter = 'alpha(opacity='+(Math.min(scale*4.5,1) * 100)+')';
+                }
+            },
+            bindEvent:function(){
+                var self = this;
+                addEventListener(this.element,'mousemove',function(event){
+                    self.onMouseMove(event);
+                });
+                var mousewheel = navigator.userAgent.indexOf('Firefox') > 0 ? 'DOMMouseScroll' : 'mousewheel';
+                addEventListener(this.element,mousewheel,function(event){
+                    self.onMouseWheel(event);
+                });
+            },
+            //在场景内移动事件
+            onMouseMove:function(event){
+                //场景的页面坐标
+                var po = getElementOffset(this.element);
+                //鼠标光标的页面坐标
+                var ev = getMouseOffset(event);
+                //场景内坐标
+                var x = ev.x-po.left;
+                var y = ev.y-po.top;
+                //中间消失点的坐标偏移差
+                this.cXl = (this.element.clientWidth/2 - x) * this.ce;
+                this.cYl = (this.element.clientHeight/2 - y) * this.ce;
+                this.reDraw();
+            },
+            onMouseWheel:function(event){
+                var code = event.wheelDelta || -event.detail;
+                if(code > 0){
+                    this.baseZ -= 200;
+                }else{
+                    this.baseZ += 200;
+                }
+                this.reDraw();
+            },
+            reDraw:function(){
+                for(var i=0 ; i<this.ThingList.length;i++){
+                    this.calcPosition(this.ThingList[i]);
+                }
+            }
+        };
+        /**
+         * 物件抽象类
+         */
+        function Thing(options){
+            this.scene = null;
+            this.wh = new WH(10,10);
+            this.xyz = new XYZ(10,10,0);
+            this.element = null;
+            this.isOpacity = true;
+            this.setOption(options);
+            this.init();
+        }
+        Thing.prototype = {
+            setOption:function(options){
+                for(var i in options){
+                    switch(i){
+                        case 'wh':
+                        case 'xyz':
+                        case 'isOpacity':
+                            this[i] = options[i];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            },
+            init:function(){
+                this.element = this.draw();
+                this.element.style.position = 'absolute';
+                this.element.style.width = this.wh.w + 'px';
+                this.element.style.height = this.wh.h + 'px';
+            },
+            draw:function(){
+                throw new Error(998,'method do not realize!');
+            },
+            getElement:function(/*Scene*/ scene){
+                this.scene = scene;
+                return this.element;
+            }
+        };
+        function Diam(options){
+            this.$supClass(options);
+        }
+        Diam.prototype = {
+            draw:function(){
+                var img = document.createElement('img');
+                loadimg = img.cloneNode(true);
+                loadimg.onload = function(){
+                    self.wh = new WH(this.width,this.height);
+                }
+                img.src = [
+                   ``
+                ][Math.round(Math.random()*6)];
+                return img;
+            }
+        };
+        extend(Diam,Thing);
+        function Sky(options){
+            this.$supClass(options);
+        }
+        Sky.prototype = {
+            draw:function(){
+                var img = document.createElement('img');
+                img.src = [
+                    'img/xxkban1.jpg',
+                    'img/xxkban1.jpg',
+                    'img/xxkban1.jpg',
+                    'img/xxkban1.jpg',
+                    'img/xxkban1.jpg',
+
+
+
+                ][Math.round(Math.random()*3)];
+                return img;
+            }
+        };
+        extend(Sky,Thing);
+        var scene = new Scene({
+            'element':'box'
+        });
+        for(var i= 0 ; i < 50 ;i++){
+            scene.addThing(new Diam({
+                wh:new WH(100,100),
+                xyz:new XYZ(Math.random() * document.body.clientWidth,Math.random() *document.body.clientHeight,Math.random() *8000)
+            }));
+        }
+        scene.addThing(new Sky({
+            wh:new WH(160000,120000),
+            xyz:new XYZ(-80000,-60000,54000),
+            isOpacity:false
+        }));
+    }(window);
+</script></body>
+</html>

@@ -1,0 +1,32 @@
+a:hover{
+    color: #25b2fe;
+}
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+h3{
+    font-size: 12px;
+    color: #0AA6E8;
+    text-align: left;
+}
+h4{
+    font-size: 16px;
+    color: #ef33a2;
+    text-align: left;
+}
+ h1{
+    font-size: 18px;font-weight:400;
+    color: #000;
+     text-align: left;
+}
+ h2{
+    font-size:12px;font-weight:200;
+    color: #000;
+     text-align: left;
+}

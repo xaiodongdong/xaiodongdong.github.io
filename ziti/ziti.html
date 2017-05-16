@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+        list-style: none;
+        box-sizing: border-box;
+    }
+    .box{
+        width: 1000px;
+        height:500px;
+        background: #f9f9f9;
+        margin:0 auto;
+        border:1px solid #999;
+    }
+    .box1{
+        width:100%;
+        height:10%;
+        background: #3ccda8;
+
+    }
+    /*.box li{*/
+        /*width:30%;*/
+        /*height:100%;*/
+    /*}*/
+    .container{
+        width:100%;
+        height:100%;
+        padding: 0 30px;
+    }
+    .container li{
+        width:30%;
+        height:100%;
+        float: left;
+        margin-right: 20px;
+        text-align: center;
+        line-height: 50px;
+    }
+    .container li select{
+        width:60px;
+        height:20px;
+    }
+    .box2{
+        width:100%;
+        height:90%;
+        padding: 20px 50px;
+    }
+</style>
+<body>
+    <div class="box">
+        <div class="box1">
+            <div class="container">
+                <li>
+                    <span>文字大小</span>
+                    <select name="" id="fontsize">
+                        <option>12px</option>
+                        <option>14px</option>
+                        <option>16px</option>
+                        <option>18px</option>
+                    </select>
+                </li>
+                <li>
+                    <span>字体</span>
+                    <select name="" id="fontfamily">
+                        <option>宋体</option>
+                        <option>黑体</option>
+                        <option>楷体</option>
+                        <option>微软雅黑</option>
+                    </select>
+                </li>
+                <li>
+                    <span>颜色</span>
+                    <input type="color" id="color">
+                </li>
+            </div>
+        </div>
+        <div class="box2">
+            <p>流口水的经费户口时间之内积分是你们岔路口科技成都市； 了跨境电商； 岁发奋无法；链接覅花去了好几次了快递搜房含金量的房间里的时刻v 操作：
+                *访问获取：document.cookie
+                *设置：document.cookie=”属性名=属性值”;（一次只能设置一个）
+                *保存：按照域名划分，不同的域名之间不能互相访问
+                *不同浏览器保存的浏览器各自独立，不能互相访问
+                *保存数据量：4kb或者20个键值对
+                *过期时间
+                默认的生存周期：session--打开网页到关闭网页（一次会话）
+                Expires:可以自己设置，用国际标准时间
+                Expires=过期时间</p>
+        </div>
+    </div>
+</body>
+<script src="cookie.js"></script>
+<script>
+    var fs=document.querySelector("#fontsize");
+    var ff=document.querySelector("#fontfamily");
+    var color=document.querySelector("#color");
+    var p=document.querySelector(".box2 p");
+    fs.onchange=function () {
+        var f1=this.value;
+        p.style.fontSize=f1;
+        setCookie("fs1",f1);
+    }
+    ff.onchange=function () {
+        var f2=this.value;
+        p.style.fontFamily=f2;
+        setCookie("ff1",f2);
+    }
+    color.onchange=function () {
+        var c=this.value;
+        p.style.color=c;
+        setCookie("color1",c);
+    }
+    if(getCookie("fs1")){
+        fs.value=getCookie("fs1");
+        fs.onchange();
+    }
+    if(getCookie("ff1")){
+        ff.value=getCookie("ff1");
+        ff.onchange();
+    }
+    if(getCookie("color1")){
+        color.value=getCookie("color1");
+        color.onchange();
+    }
+</script>
+</html>

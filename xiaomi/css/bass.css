@@ -1,0 +1,25 @@
+/*
+* @Author: Lenovo
+* @Date:   2017-03-07 15:42:46
+* @Last Modified by:   Lenovo
+* @Last Modified tisme: 2017-03-15 11:52:58
+*/
+*{
+	margin: 0;
+	padding:0;
+	text-decoration: none;/* 去除a标签的下划线 */
+	text-align:center;
+	transition:all 0.3s linear;
+	-webkit-transition:all 0.3s linear;
+	/* <!-- chrome/safari 浏览器 --> */
+	-moz-transition:all 0.3s linear;
+	/* <!-- 火狐浏览器 --> */
+	-o-transition:all 0.3s linear;
+	/* <!-- opear浏览器 --> */
+}
+a{
+	color: #808080;
+}
+ul li{
+	list-style: none;
+}

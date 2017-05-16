@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,body{
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        .box{
+            width:1200px;
+            height:100%;
+            margin: 0 auto;
+            /*background: rgba(118, 78, 90, 0.42);*/
+            overflow: hidden;
+            background: url("img/bg.png");
+        }
+        .main{
+            width:80%;
+            height:100%;
+            /*background: #00C6D7;*/
+            float: left;
+            position: relative;
+        }
+        .control{
+            width:20%;
+            height: 100%;
+            /*background:#00a78e;*/
+            float: left;
+        }
+        .letter{
+            width:130px;
+            height:130px;
+            /*border:5px solid #dcce39;*/
+            font-size: 30px;
+            text-align: center;
+            line-height: 80px;
+            border-radius: 10px;
+            position: absolute;
+            background-repeat: no-repeat;
+
+        }
+        .control ul li{
+            width:80%;
+            height: 40px;
+            background: #ffb523;
+            margin-left: 5%;
+            margin-top: 10px;
+            border-radius: 40px;
+            list-style: none;
+            text-align: center;
+            line-height: 40px;
+            font-size: 20px;
+            user-select: none;
+        }
+        .control ul li:nth-child(7){
+            cursor:pointer;
+        }
+        .bo{
+            width: 50px;
+            height: 50px;
+            background: #1e1c1a;
+            opacity: 0.5;
+        }
+        .bo:hover{
+            width: 50%;
+            height: 160px;
+            border-radius: 20px;
+            background: #ffb523;
+            margin:10px  auto;
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            color: #dd7485;
+            opacity: 1;
+        }
+        table{
+            width:100%;
+        }
+        td{
+            color: #ffffff;
+        }
+        .name{
+            background: #ff9075;
+            padding: 5px;
+            border-radius: 20px;
+            color: #dd0000;
+        }
+        /**{*/
+            /*user-select: none;*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div class="main">
+        <div class="bo">
+
+
+        <div class="name">排行榜</div>
+        <table>
+
+            </tbody>
+
+        </table>
+        </div>
+    </div>
+
+    <div class="control">
+
+        <ul>
+            <li>得分</li>
+            <li>0</li>
+            <li>关卡</li>
+            <li>1</li>
+            <li>生命</li>
+            <li>5</li>
+            <li>开始</li>
+            <li>暂停</li>
+            <li>结束</li>
+        </ul>
+    </div>
+</div>
+</body>
+<script>
+    //创建字母
+/*
+    var main=document.querySelector(".main");
+
+    var num=3;
+    var obj={};
+    function createLetter() {
+        var div=document.createElement("div");
+        div.className="letter";
+
+        do{
+            var r1 = Math.floor(Math.random() * 26 + 65);
+            var r2 = String.fromCharCode(r1);
+        }while(obj[r2]);
+
+        div.innerHTML=r2;
+
+        do{
+            var r3=Math.random()*720;
+        }while(check(r3));
+
+
+        div.style.left=r3+"px";
+
+        var r4=-Math.random()*100;
+
+        obj[r2]={left:r3,top:r4,el:div};
+        div.style.top=r4+"px";
+        main.appendChild(div);
+
+    }
+    function play() {
+        for(var i=0;i<num;i++){
+            createLetter();
+        }
+    }
+    function  check(left) {
+        for(var i in obj){
+            if(left>obj[i].left-100&&left<obj[i].left+100){
+                return true;
+            }
+        }
+    }
+    play();
+    setInterval(function () {
+        for(var i in obj){
+            var t=obj[i].top;
+            t=t+5;
+            obj[i].top=t;
+            obj[i].el.style.top=t+"px";
+//            if (t>600){
+//               main.removeChild(obj[l].el);
+//                delete obj[l];
+//                createLetter();
+//            }
+        }
+    },50);
+    console.log(main);
+    document.onkeydown=function (e) {
+        var keycode=e.keyCode;
+        var l=String.fromCharCode(keycode);
+        if(obj[l]){
+            main.removeChild(obj[l].el);
+            delete obj[l];
+            createLetter();
+        }};*/
+
+    var main=document.querySelector(".main");
+
+    var lis=document.querySelectorAll(".control ul li");
+    var abc=true;
+
+
+
+    class Game{
+        constructor(main,fengs,guans,shengs){
+            this.main=main;
+            this.num=3;
+            this.obj={};
+            this.fengs=fengs;
+            this.feng=0;
+            this.guans=guans;
+            this.guan=1;
+            this.shengs=shengs;
+            this.sheng=5
+            this.sd=2;
+            this.startword=true;
+            this.xunhun=null;
+        }
+        getData() {
+        var data=localStorage.table?JSON.parse(localStorage.table):[];
+        return data;}
+        saveData(data) {
+        if(data==undefined){
+            return;
+        }
+        localStorage.table=JSON.stringify(data);
+    }
+
+    _guanss(){
+//            this.shengs.innerHTML="0";
+            alert(`你的得分${this.feng}`);
+          
+            this.startword=true;
+            this.obj={};
+            this.feng=0;
+            this.fengs.innerHTML=this.feng;
+            this.guan=1;
+            this.guans.innerHTML=this.guan;
+            this.sheng=5;
+            this.shengs.innerHTML=this.sheng;
+            this.sd=2;
+            this.main.innerHTML="";
+            clearInterval(this.xunhun);
+        }
+        _createLetter(){
+
+            var div=document.createElement("div");
+            div.className="letter";
+            do{
+                var z1=Math.floor(Math.random()*26+65);
+                var z2=String.fromCharCode(z1)
+            }while (this.obj[z2]);
+            div.style.background=`url("img/${z2}.png") center no-repeat`;
+            do{
+                var l1=Math.floor(Math.random()*880);
+            }while (this._check(l1));
+            div.style.left=l1+"px";
+            var t1=-Math.random()*100;
+            div.style.top=t1+"px";
+            this.obj[z2]={left:l1,top:t1,el:div};
+            this.main.appendChild(div);
+        }
+
+    _check(left){
+        for(var i in this.obj){
+            if(left>this.obj[i].left-100&&left<this.obj[i].left+100){
+                return true;
+            }
+        }
+    }
+
+        _keycode(){
+            document.onkeydown=function (e) {
+                var keycode=e.keyCode;
+                var l=String.fromCharCode(keycode);
+
+                if(this.obj[l]){
+                    this.main.removeChild(this.obj[l].el);
+                    delete this.obj[l];
+                    this._createLetter();
+                    this.feng+=1;
+
+                    this.fengs.innerHTML=this.feng;
+                    if(this.feng%3==0&&this.feng>0){
+                        this.guan+=1;
+                        this.guans.innerHTML=this.guan;
+                        if(this.guan<=3){
+
+                            this._createLetter();
+                        }else {
+                            this.sd++;
+                        }
+                    }
+                }
+            }.bind(this);
+
+
+        }
+        _move(){
+            this.xunhun=setInterval(function () {
+                for(var i in this.obj){
+                    var t=this.obj[i].top;
+                    t=t+this.sd;
+                    this.obj[i].top=t;
+                    this.obj[i].el.style.top=t+"px";
+//                    console.log(t);
+                    var n=this.main.offsetHeight;
+//                    console.log(n);
+                    if(t>n){
+                        this.main.removeChild(this.obj[i].el);
+                        delete this.obj[i];
+                        this._createLetter();
+                        this.sheng-=1;
+
+                        if (this.sheng<0){
+
+                            this._guanss()
+                        }
+                        this.shengs.innerHTML=this.sheng;
+
+                    }
+                }
+            }.bind(this),30)
+        }
+
+        start(){
+            for(var i=0;i<3;i++){
+                this._createLetter();
+            }
+
+            this._keycode();
+            this._move();
+
+        }
+        pause(){
+            clearInterval(this.xunhun);
+            document._keyboard=null;//停止键盘事件
+        }
+        play(){
+            this._move();//this指的是game
+            this._keycode();
+        }
+//        over{
+//
+//    }
+
+    }
+
+    var game=new Game(main,lis[1],lis[3],lis[5]);
+    lis[6].onclick=function () {
+        if(game.startword){
+            game.start();
+            game.startword=false;
+        }
+    }
+    lis[7].onclick=function (){
+
+    if(abc){
+//        alert(1);
+        game.pause();
+        lis[7].innerHTML="继续";
+    }else{
+        game.play();
+       lis[7].innerHTML="停止";
+    }
+        abc=!abc;
+    }
+    lis[8].onclick=function (){
+
+        game._guanss();
+    }
+</script>
+</html>

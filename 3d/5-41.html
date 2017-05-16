@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        padding:0;
+        margin:0;
+    }
+    @font-face {
+        font-family: 'iconfont';  /* project id 293355 */
+        src: url('//at.alicdn.com/t/font_galhy9atumnm6lxr.eot');
+        src: url('//at.alicdn.com/t/font_galhy9atumnm6lxr.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_galhy9atumnm6lxr.woff') format('woff'),
+        url('//at.alicdn.com/t/font_galhy9atumnm6lxr.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_galhy9atumnm6lxr.svg#iconfont') format('svg');
+    }
+
+    .container{
+        width:600px;
+        height:400px;
+        border:1px solid red;
+        margin: 0 auto;
+    }
+    .container video{
+        width:600px;
+        height:356px;
+        background: #000;
+    }
+    .controls{
+        width:600px;
+        height:40px;
+        display: flex;
+        flex-direction: row;
+    }
+    .start{
+        width:40px;
+        height:40px;
+        cursor:pointer;
+        float: left;
+    }
+    .reload{
+        width:40px;
+        height:40px;
+        float: left;
+        cursor:pointer;
+    }
+    .icon{
+        font-family: 'iconfont';
+        text-align: center;
+        line-height: 40px;
+        font-size: 30px;
+    }
+    .progress{
+        width:auto;
+        height:10px;
+        background:#ccc;
+        flex-grow: 1;
+        margin-top: 15px;
+    }
+    .inner{
+        width:0;
+        height:10px;
+        background: #2d6e8b;
+    }
+    .time{
+        width:100px;
+        height:40px;
+        padding-left: 10px;
+    }
+    .time span{
+        display: inline-block;
+        float: left;
+        width:45%;
+        line-height: 40px;
+    }
+    .time b{
+        width:10%;
+        display: inline-block;
+        float: left;
+        line-height: 40px;
+    }
+    .volume{
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        background: #0a6531;
+        position: relative;
+
+
+    }
+    .volume span{
+        display: block;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        z-index: 1;
+    }
+    .volume .bg{
+        width: 40px;
+        height: 150px;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: rgba(155,155,155,0.5);
+        display: none;
+
+    }
+    .vol{
+        width: 10px;
+        height: 110px;
+        background: #1e1c1a;
+        margin: 0 auto;
+    }
+    .volinner{
+        width: 10px;
+        height: 10px;
+        background: #00ff00;
+        float: left;
+
+    }
+    .mask{
+        width: 40px;
+        height: 110px;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+</style>
+<body>
+<div class="container">
+    <video src="720_ending.mp4" controls></video>
+        <div class="controls">
+            <div class="start icon">
+                &#xe6e3;
+            </div>
+            <div class="reload icon">
+                &#xe627;
+            </div>
+            <div class="progress">
+                <div class="inner"></div>
+            </div>
+            <div class="time">
+                <span class="now">00:00</span>
+                <b>/</b>
+                <span class="all">00:00</span>
+            </div>
+            <div class="volume">
+                <span class="icon">&#xe642;</span>
+                <div class="bg">
+                    <div class="vol">
+                        <div class="volinner">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mask"></div>
+
+            </div>
+        </div>
+       </div>
+</body>
+<script src="hover.js"></script>
+<script>
+    var video=document.querySelector("video")
+    var start=document.querySelector(".start");
+    var reload=document.querySelector(".reload");
+    var progress=document.querySelector(".progress");
+    var inner=document.querySelector(".inner");
+    var now=document.querySelector(".now");
+    var all=document.querySelector(".all")
+    var volume=document.querySelector(".volume")
+    var bg=document.querySelector(".bg")
+    var mask=document.querySelector(".mask")
+    var volicon=document.querySelector(".volume .icon")
+
+    var l=progress.offsetWidth;
+    var startflag=true;
+    start.onclick=function () {
+        if(startflag){
+            video.play();//播放方法
+            start.innerHTML="&#xe6d2;";
+        }else {
+            video.pause();//暂停方法
+            start.innerHTML="&#xe6e3;";
+        }
+        startflag=!startflag;
+    }
+    reload.onclick=function () {
+        video.load();
+        start.innerHTML="&#xe6e3;";
+        startflag=true;
+    }
+    var duration=0;
+    var now1=0;
+    video.oncanplay=function () {//页面加在完成后
+        duration=video.duration; //视频的总时间
+        all.innerHTML=time(duration);
+    }
+    video.ontimeupdate=function () {//播放位置发生改变方法
+        now1=video.currentTime;//视频的当前进行时间
+        now.innerHTML=time(now1);
+        var width=now1/duration; //进度条的长度的百分比
+        inner.style.width=width*100+"%";
+    }
+    function time(t) {
+        var mins=Math.floor(t/60);
+        var secs=Math.floor(t%60);
+        return mins+":"+(secs<10?"0"+secs:secs);
+    }
+    progress.onmousedown=function (e) {
+        var ox=e.offsetX;
+
+        var bili=ox/l;
+        var pos=duration*bili;
+        video.currentTime=pos;
+        document.onmousemove=function () {
+            var ox=e.clientX-progress.offsetLeft;
+            var bili=ox/l;
+            var pos=duration*bili;
+            video.currentTime=pos;
+        }
+       document.onmouseup=function () {
+           document.onmousedown=null;
+            document.onmouseup=null;
+        }
+    }
+    hover(volume,function () {
+        bg.style.display="block";
+
+    },function () {
+        bg.style.display="none";
+        mask.onmousedown=null;
+        mask.onmouseup=null;
+    })
+
+</script>
+<html>

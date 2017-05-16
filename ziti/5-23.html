@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+            text-align: center;
+            list-style: none;
+
+        }
+        .box{
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+            border: 1px solid #cccccc;
+        }
+        .top{
+            background: #01b5ff;
+            width: 800px;
+            height: 100px;
+
+        }
+        .top li{
+            float: left;
+            width: 33%;
+            height: 100px;
+            line-height: 100px;
+
+        }
+        .content{
+            width:800px;
+            height: 500px;
+            padding: 20px 20px;
+
+        }
+    </style>
+
+</head>
+<body>
+<div class="box">
+    <ul class="top">
+        <li>
+            文字大小
+            <select name="fontsize" style="font-size: 12px" id="" >
+                <option value="">12px</option>
+                <option value="">14px</option>
+                <option value="">16px</option>
+                <option value="">18px</option>
+
+            </select>
+        </li>
+        <li>
+            字体
+            <select name="fontfamily" style="font-family: "苹方"" id="" >
+                <option value="">微软雅黑</option>
+                <option value="">宋体</option>
+                <option value="">黑体</option>
+            </select>
+        </li>
+        <li>文字颜色
+
+                <input type="color">
+
+        </li>
+    </ul>
+    <div class="content" contenteditable="true" >
+
+    </div>
+</div>
+</body>
+<script>
+    var fontSize=document.querySelector("[name=fontsize]");
+    var fontFamily=document.querySelector("[name=fontfamily]");
+    var color=document.querySelector("[name=color]");
+    var content=document.querySelector(".content");
+    fontSize.onchange=function () {
+      var fs=fontSize.style.fontSize;
+        content.style.fontSize=fs;
+    }
+
+
+
+
+</script>
+</html>

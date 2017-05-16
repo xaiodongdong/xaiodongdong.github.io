@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    canvas{
+        background: #ccc;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+</head>
+<body>
+<canvas width="500px" height="500px">
+</canvas>
+</body>
+<script>
+    var canvas=document.querySelector("canvas");
+    var cobj=canvas.getContext("2d");
+    cobj.translate(250,250);
+    cobj.save();
+    function plate() {
+        cobj.lineWidth=6;
+        cobj.beginPath();
+        cobj.arc(0,0,120,0,Math.PI*2)
+        cobj.stroke();
+        for (var i=0;i<60;i++){
+            var s=107;
+            cobj.lineWidth=2
+            if(i%5==0){
+                s=102;
+                cobj.lineWidth=4
+            }
+
+
+        cobj.beginPath();
+        cobj.moveTo(s,0)
+        cobj.lineTo(115,0)
+        cobj.stroke();
+            cobj.rotate(6*Math.PI/180)
+    }
+        cobj.restore();
+    }
+    plate()
+    function pointer(ha,ma,sa) {
+        cobj.save();
+        cobj.lineWidth=6
+        cobj.rotate(ha)
+        cobj.beginPath();
+        cobj.moveTo(0,0)
+        cobj.lineTo(0,-50)
+        cobj.stroke();
+        cobj.restore();
+
+        cobj.save();
+        cobj.lineWidth=4
+        cobj.rotate(ma)
+        cobj.beginPath();
+        cobj.moveTo(0,0)
+        cobj.lineTo(0,-70)
+        cobj.stroke();
+        cobj.restore();
+
+
+        cobj.save();
+        cobj.lineWidth=2
+        cobj.rotate(sa)
+        cobj.strokeStyle="red";
+        cobj.beginPath();
+        cobj.moveTo(0,0)
+        cobj.lineTo(0,-90)
+        cobj.stroke();
+        cobj.restore();
+    }
+    setInterval(time,1000)
+    function time() {
+
+        cobj.clearRect(-250,-250,500,500)
+        plate();
+        var date=new Date();
+        var hour=date.getHours();
+        var min=date.getMinutes();
+        var sec=date.getSeconds();
+
+        pointer(hour/12*Math.PI*2+min/60*Math.PI/6,min/60*Math.PI*2,sec/60*Math.PI*2);
+    }
+    time()
+
+</script>
+</html>

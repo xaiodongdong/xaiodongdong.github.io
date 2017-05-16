@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        @font-face {
+            font-family: 'iconfont';
+            src: url('icon/iconfont.eot'); /* IE9*/
+            src: url('icon/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('icon/iconfont.woff') format('woff'), /* chrome、firefox */ url('icon/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('icon/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+        }
+
+
+        .iconfont {
+            font-family: "iconfont" !important;
+            font-size: 24px;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .container {
+            width: 600px;
+            height: 540px;
+            /*border: 1px solid red;*/
+            margin: 0 auto;
+        }
+
+        video {
+            width: 100%;
+            background: #000;
+            height: 90%;
+            display: block;
+            /*position: relative;*/
+        }
+
+        .controls {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            /*background: #333;*/
+            /*margin: 0 auto;*/
+        }
+
+        .start {
+            width: 40px;
+            height: 40px;
+            /*background: red;*/
+            text-align: center;
+            line-height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .reload {
+            width: 40px;
+            height: 40px;
+            /*background: blue;*/
+            cursor: pointer;
+        }
+
+        .progress {
+            width: auto;
+            height: 10px;
+            background: #ccc;
+            flex-grow: 1;
+            margin-top: 15px;
+        }
+
+        .inner {
+            width: 0px;
+            height: 10px;
+            background: #333;
+        }
+
+        .time {
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 12px;
+            margin: 0 10px;
+        }
+
+        .time span {
+            float: left;
+            width: 45%;
+        }
+
+        .time b {
+            float: left;
+            width: 10%;
+        }
+        .volume{
+            width: 40px;
+            height: 40px;
+            /*background: red;*/
+            position: relative;
+            cursor: pointer;
+        }
+        .volume span{
+            display: block;
+            width: 40px;
+            height: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .volume .bg{
+            width: 40px;
+            height: 150px;
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+            background: rgba(255,255,255,0.5);
+            display: none;
+        }
+        .vol{
+            width: 10px;
+            height: 110px;
+            background: #ccc;
+            margin: 0 auto;
+        }
+        .volinner{
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            float: left;
+        }
+        .mask{
+            width: 40px;
+            height: 110px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .fullscreen{
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            user-select: none;
+        }
+        html,body{
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        .scene{
+            width: 100%;
+            height: 100%;
+            border:1px solid red;
+            margin: 0 auto;
+            perspective: 600px;
+        }
+        .scene ul{
+            width: 100%;
+            height: 100%;
+            /*background: #ccc;*/
+            margin: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            /*transition: transform 10s;*/
+        }
+        .scene:hover ul{
+            transform: rotate3d(1,1,0,360deg);
+        }
+        .scene ul li{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            backface-visibility:visible;
+            font-size: 100px;
+        }
+        .scene ul li:nth-child(1){
+            background: red;
+            transform-origin: top;
+            transform: rotateX(90deg);
+        }
+        .scene ul li:nth-child(2){
+            background: blue;
+            transform-origin: left;
+            transform: rotateY(-90deg);
+        }
+        .scene ul li:nth-child(3){
+            background: yellow;
+            transform-origin: bottom;
+            transform: rotateX(-90deg);
+        }
+        .scene ul li:nth-child(4){
+            background: #ff7418;
+            transform-origin: right;
+            transform: rotateY(90deg);
+        }
+        .scene ul li:nth-child(5){
+            background: #4cddff;
+            transform-origin: top;
+            transform: translate3d(0,0,100px);
+        }
+        .scene ul li:nth-child(6){
+            /*width: 1366px;*/
+            /*height: 405px;*/
+            background: #ff348b;
+            transform-origin: top;
+            /*transform: rotateX(90deg);*/
+        }
+
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <ul class="box">
+            <li>top</li>
+            <li>left</li>
+            <li>bottom</li>
+            <li>right</li>
+            <li>front</li>
+            <li>
+                <div class="container">
+                    <video>
+                        <source src="720_ending.mp4">
+                    </video>
+                    <div class="controls">
+                        <div class="start iconfont">
+                            &#xe601;
+                        </div>
+                        <div class="reload iconfont">
+                            &#xe600;
+                        </div>
+                        <div class="progress">
+                            <div class="inner"></div>
+                        </div>
+                        <div class="time">
+                            <span id="now">00:00</span>
+                            <b>/</b>
+                            <span id="all">00:00</span>
+                        </div>
+                        <div class="volume">
+                            <span class="iconfont">&#xe607;</span>
+                            <div class="bg">
+                                <div class="vol">
+                                    <div class="volinner"></div>
+                                </div>
+                                <div class="mask"></div>
+                            </div>
+                        </div>
+                        <div class="fullscreen iconfont">&#xe602;</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script src="hover.js"></script>
+<script>
+    var video = document.querySelector("video");
+    var startbtn = document.querySelector(".start");
+    var reload = document.querySelector(".reload");
+    var progress = document.querySelector(".progress");
+    var inner = document.querySelector(".inner");
+    var now = document.querySelector(".time #now");
+    var all = document.querySelector(".time #all");
+    var volume=document.querySelector(".volume");
+    var bg=document.querySelector(".volume .bg");
+    var vol=document.querySelector(".vol");
+    var volinner=document.querySelector(".volinner");
+    var mask=document.querySelector(".mask");
+    var volicon=document.querySelector(".volume span");
+    var fullscreen=document.querySelector(".fullscreen");
+    var container=document.querySelector(".container");
+    var l = progress.offsetWidth;
+    console.log(l)
+    var startflag = true;
+    startbtn.onclick = function () {
+        if (startflag) {
+            video.play();
+            startbtn.innerHTML = "&#xe605;";
+        } else {
+            video.pause();
+            startbtn.innerHTML = "&#xe601;";
+        }
+        startflag = !startflag;
+
+    };
+    reload.onclick = function () {
+        video.load();
+        startbtn.innerHTML = "&#xe601;";
+        startflag = true;
+    };
+    var duration = 0;
+    var nowtime = 0;
+    video.oncanplay = function () {
+        duration = video.duration;
+        all.innerHTML = time(duration);
+    };
+    video.ontimeupdate = function () {
+        nowtime = video.currentTime;
+        now.innerHTML = time(nowtime);
+        var width = nowtime / duration;
+        inner.style.width = width * 100 + "%";
+    };
+    function time(t) {
+        var mins = Math.floor(t / 60);
+        var secs = Math.floor(t % 60);
+        return (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+    }
+
+    progress.onmousedown = function (e) {
+        var ox = e.offsetX;
+        var bili = ox / l;
+        var pos = duration * bili;
+        video.currentTime = pos;
+        document.onmousemove = function (e) {
+            var ox = e.clientX-progress.offsetLeft;
+            var bili = ox / l;
+            var pos = duration * bili;
+            video.currentTime = pos;
+        };
+        document.onmouseup = function () {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+    };
+
+    hover(volume,function () {
+        bg.style.display="block";
+    },function () {
+        bg.style.display="none";
+        mask.onmousemove=null;
+        mask.onmouseup=null;
+    });
+    mask.onmousedown=function (e) {
+        var oy=e.offsetY;
+        oy=oy>100?100:oy;
+        var v=1-oy/100;
+        video.volume=v;
+        if(v==0){
+            volicon.innerHTML="&#xe606;";
+        }else{
+            volicon.innerHTML="&#xe607;";
+        }
+        volinner.style.marginTop=oy+"px";
+        mask.onmousemove=function (e) {
+            var oy=e.offsetY;
+            oy=oy>100?100:oy;
+            var v=1-oy/100;
+            video.volume=v;
+            if(v==0){
+                volicon.innerHTML="&#xe606;";
+            }else{
+                volicon.innerHTML="&#xe607;";
+            }
+            volinner.style.marginTop=oy+"px";
+        };
+        mask.onmouseup=function () {
+            mask.onmousemove=null;
+            mask.onmouseup=null;
+        }
+    };
+    var volfalg=true;
+    volicon.onclick=function () {
+        if(volfalg){
+            volicon.innerHTML="&#xe606;";
+            video.muted=true;
+        }else{
+            volicon.innerHTML="&#xe607;";
+            video.muted=false;
+        }
+        volfalg=!volfalg;
+    };
+
+    var fullflag=true;
+    fullscreen.onclick=full;
+    video.ondblclick=full;
+    document.onkeydown=function (e) {
+        if(e.keyCode==27){
+            fullflag=false;
+            full();
+        }
+    }
+    function full() {
+        if(fullflag){
+            fullscreen,innerHTML="&#xe608;"
+            container.style.width="100%";
+            container.style.height="100%";
+        }else{
+            fullscreen.innerHTML="&#xe602;"
+            container.style.width=600+"px";
+            container.style.height=400+"px";
+        }
+        fullflag=!fullflag;
+    };
+
+
+
+    window.onkeydown = function (e) {
+        console.log(e)
+        if (startflag) {
+            if (e.keyCode == 32) {
+                video.play();
+                startbtn.innerHTML = "&#xe605;";
+            }
+        } else {
+            if (e.keyCode == 32) {
+                video.pause();
+                startbtn.innerHTML = "&#xe601;";
+            }
+        }
+
+        startflag = !startflag;
+
+    }
+</script>
+<script>
+    var tops=document.querySelector("li:nth-child(1)");
+    var bottom=document.querySelector("li:nth-child(3)");
+    var front=document.querySelector("li:nth-child(5)");
+//    var back=document.querySelector("li:nth-child(6)");
+    var box=document.querySelector(".box");
+    var clientW=window.innerWidth;
+    var clientH=window.innerHeight;
+    tops.style.width=tops.style.height=bottom.style.width=bottom.style.height=clientW+"px";
+    bottom.style.top=clientH-clientW+"px";
+    front.style.transform=`translateZ(${clientW}px)`;
+//    back.style.transform=`translateZ(${clientW}px)`;
+    box.style.transform="translateZ(-500px)";
+    box.style.transformOrigin="center center 600px";
+    var startangle=0;
+    var nowangle=0;
+    document.onmousedown=function (e) {
+        var sx=e.clientX;
+        document.onmousemove=function (e) {
+            var cx=e.clientX;
+            nowangle=cx-sx;
+            box.style.transform=`translateZ(-300px) rotateY(${startangle+nowangle}deg)`;
+        };
+        document.onmouseup=function () {
+            startangle+=nowangle;
+
+            document.onmousemove=null;
+            document.onmouseup=null;
+        }
+    }
+</script>
+</html>
