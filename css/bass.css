@@ -1,0 +1,15 @@
+/*
+* @Author: Lenovo
+* @Date:   2017-03-27 17:41:17
+* @Last Modified by:   Lenovo
+* @Last Modified time: 2017-03-30 08:34:28
+*/
+*{
+	margin: 0;
+	padding: 0;
+	text-decoration: none;    /* 取消a标签的下划线 */
+	box-sizing: border-box;   /* 去除边框 */
+	list-style: none;
+	/* overflow: hidden; */
+
+}
