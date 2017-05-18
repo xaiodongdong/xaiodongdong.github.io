@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload=function () {
+
+
+            function createPlate() {
+                var div = document.createElement("div");
+                div.style.cssText = "width:200px;height:200px;border:5px solid red;margin:0 auto;border-radius:50%;  " +
+                        "position:relative"
+                document.body.appendChild(div)
+                for (var i = 0; i < 60; i++) {
+                    let kd = document.createElement("div");
+                    kd.style.cssText = "width:4px;height:5px;background:#ccc;position:absolute;left:98px;  " +
+                            "top:0;transform-origin:2px 100px"
+                    let angle = i * 6;
+                    if (i % 5 == 0) {
+                        kd.style.height = "10px";
+                        kd.style.background = "#000";
+                    }
+                    kd.style.transform = `rotate(${angle}deg)`
+                    div.appendChild(kd)
+
+                }
+                var circle=document.createElement("div");
+                circle.style.cssText="width:16px;height:16px;border-radius:50%;background:#000;" +
+                        "position:absolute;left:92px;top:92px;z-index:1;";
+                div.appendChild(circle);
+
+
+//                创建时针
+                var hour=document.createElement("div");
+                hour.style.cssText="width:60px;height:5px;background:#000;position:absolute;left:100px;" +
+                        "top:98px;transform-origin:left center;"
+                div.appendChild(hour)
+
+                var minute=document.createElement("div")
+                minute.style.cssText="width:80px;height:3px;background:red;position:absolute;left:100px;" +
+                        "top:99px;transform-origin:left center;"
+                div.appendChild(minute)
+                var second=document.createElement("div")
+                second.style.cssText="width:90px;height:1px;background:blue;position:absolute;left:100px;" +
+                        "top:100px;transform-origin:left center;"
+                div.appendChild(second)
+                function  setTime() {
+                    var date=new Date()
+                    var hours=date.getHours();
+                    var seconds=date.getSeconds();
+                    var minutes=date.getMinutes();
+                    hour.style.transform=`rotate(${hours/12*360-90+minutes/60*30}deg)`;
+                    minute.style.transform=`rotate(${minutes/60*360-90}deg)`;
+                    second.style.transform=`rotate(${seconds/60*360-90}deg)`;
+
+                }
+                setInterval(setTime,1000);
+                setTime();
+            }
+
+            createPlate()
+
+        }
+    </script>
+
+    <style>
+
+    </style>
+</head>
+<body>
+
+</body>
+
+</html>

@@ -197,7 +197,7 @@
              
     
               font-size: 22px;
-              color: #000;
+              color: #fff;
               font-weight:500;
             margin-right: 80px;
                text-align: justify;
@@ -244,7 +244,7 @@
   .yk211 p b{
     width: 100%;
     height: 30px;
-      color: #000;
+      color: #fff;
    
   }
   .yk211 p {
@@ -253,7 +253,7 @@
     margin: 10px 0;
     font-size: 18px;
     font-weight: 200;
-      color: #000;
+      color: #fff;
       line-height: 2;
   }
   .tiao{
@@ -400,7 +400,7 @@
 .yk241 h2{
   margin-bottom: 20px;
     font-size: 34px;
-    color: #000;
+    color: #fff;
 }
 .yk241 ul{
  width: 100%;
@@ -791,4 +791,7 @@ h1 small:last-child {
  }
 .bg{
     z-index: 1;
+}
+.dibu span{
+    color: #fff;
 }
