@@ -302,12 +302,13 @@
 	margin: auto;
 	color: #c9ced3;
 	z-index: 10;
+
 }
 .zuojt:hover{
-	background: white;
+	background: white;cursor: pointer;
 }
 .zuojt1:hover{
-	background: white;
+	background: white;cursor: pointer;
 }
 .zuojt1{
 	font-size: 60px;
